@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>GPT 대화 수동 저장</title>
+</head>
+<body>
+    <h1>GPT 대화 수동 저장</h1>
+
+    <textarea id="message" rows="10" cols="50" placeholder="여기에 대화를 붙여넣기"></textarea><br><br>
+    <button onclick="sendData()">대화 저장</button>
+
+    <script>
+        function sendData() {
+            const message = document.getElementById('message').value.trim();
+            if (!message) {
+                alert('저장할 대화가 없습니다!');
+                return;
+            }
+
+            fetch('https://hooks.zapier.com/hooks/catch/22677451/2p616gd/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ "대화내용": message })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('✅ 저장 성공!');
+                } else {
+                    response.text().then(text => {
+                        console.error('응답 실패:', text);
+                        alert('❌ 저장 실패!\n' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('에러 발생:', error);
+                alert('❌ 저장 중 에러가 발생했습니다.\n' + error);
+            });
+        }
+    </script>
+</body>
+</html>
